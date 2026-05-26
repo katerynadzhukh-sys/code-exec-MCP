@@ -77,9 +77,11 @@ export class DockerRunner implements CodeExecRunner {
       "--cap-drop=ALL",
       "--security-opt=no-new-privileges",
       `--memory=${cfg.memoryMB}m`,
+      `--memory-swap=${cfg.memoryMB}m`,
       `--cpus=${cfg.cpus}`,
       "--tmpfs=/tmp:size=64m",
       "--pids-limit=64",
+      "--user=sandboxuser",
       "-v", `${codeDir}:/work:ro`,
       "-w", "/work",
     ];
@@ -96,11 +98,12 @@ export class DockerRunner implements CodeExecRunner {
         stdout: capBytes(stdout, cfg.stdoutBytes),
         stderr: capBytes(stderr, cfg.stdoutBytes),
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as NodeJS.ErrnoException & { stdout?: string; stderr?: string };
       return {
-        stdout: error.stdout ? capBytes(error.stdout, cfg.stdoutBytes) : "",
-        stderr: error.stderr ? capBytes(error.stderr, cfg.stdoutBytes) : "",
-        runError: error,
+        stdout: err.stdout ? capBytes(err.stdout, cfg.stdoutBytes) : "",
+        stderr: err.stderr ? capBytes(err.stderr, cfg.stdoutBytes) : "",
+        runError: err,
       };
     }
   }
@@ -173,13 +176,17 @@ export function createCodeExecTool(
       };
 
       let text = stdout;
-      if (runError) {
+      if (timedOut) {
+        meta.exit_error = `Execution timed out after ${cfg.wallClockMs} ms`;
+        text = `Execution timed out after ${cfg.wallClockMs} ms`;
+      } else if (runError) {
         meta.exit_error = runError.message;
         text = stderr ? `${stderr}\n---\n${stdout}` : stdout;
       }
 
       return {
         content: [{ type: "text" as const, text: JSON.stringify({ text, meta }, null, 2) }],
+        isError: runError !== undefined,
       };
     },
   };
