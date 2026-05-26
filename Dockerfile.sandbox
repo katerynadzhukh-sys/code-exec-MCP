@@ -1,0 +1,16 @@
+FROM python:3.13-slim
+
+# Install necessary scientific computing libraries
+# We use --no-cache-dir to keep the image size down
+RUN pip install --no-cache-dir numpy pandas scipy matplotlib
+
+# Agg is a non-interactive PNG backend — no display server needed inside the container
+ENV MPLBACKEND=Agg
+# /tmp is the only writable volume (tmpfs); redirect matplotlib's cache there
+ENV MPLCONFIGDIR=/tmp
+
+# Set a non-root user for extra security (even though runsc is used)
+RUN useradd -m sandboxuser
+USER sandboxuser
+
+WORKDIR /work

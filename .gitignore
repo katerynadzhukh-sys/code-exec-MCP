@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.js.map
+.env
+.tmp/
+.claude/
+test_node.js

@@ -1,0 +1,110 @@
+<svg width="760" height="540" viewBox="0 0 760 540" xmlns="http://www.w3.org/2000/svg" font-family="monospace, sans-serif">
+
+  <!-- Background -->
+  <rect width="760" height="540" fill="#f8f8f6" rx="12"/>
+
+  <!-- Title -->
+  <text x="380" y="34" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a1a">gVisor — Syscall-Abfangung (Interception)</text>
+  <text x="380" y="54" text-anchor="middle" font-size="12" fill="#555">Vergleich: Standard-Docker vs. gVisor (--runtime=runsc)</text>
+
+  <!-- ══ LEFT COLUMN: Standard Docker ══ -->
+  <rect x="20" y="75" width="330" height="440" rx="10" fill="#fdecea" stroke="#e53935" stroke-width="1.5"/>
+  <text x="185" y="102" text-anchor="middle" font-size="13" font-weight="bold" fill="#b71c1c">Standard Docker (runc)</text>
+
+  <!-- Python App -->
+  <rect x="50" y="118" width="270" height="48" rx="8" fill="#fff" stroke="#ef9a9a" stroke-width="1.2"/>
+  <text x="185" y="138" text-anchor="middle" font-size="12" font-weight="bold" fill="#c62828">Python-Anwendung</text>
+  <text x="185" y="156" text-anchor="middle" font-size="10" fill="#888">import os; os.listdir("/")</text>
+
+  <!-- Arrow 1 left -->
+  <line x1="185" y1="166" x2="185" y2="196" stroke="#e53935" stroke-width="2" marker-end="url(#arrRed)"/>
+  <text x="200" y="186" font-size="10" fill="#c62828">syscall: getdents64</text>
+
+  <!-- libc -->
+  <rect x="50" y="196" width="270" height="40" rx="8" fill="#ffcdd2" stroke="#ef9a9a" stroke-width="1.2"/>
+  <text x="185" y="221" text-anchor="middle" font-size="11" fill="#b71c1c">libc (glibc)</text>
+
+  <!-- Arrow 2 left -->
+  <line x1="185" y1="236" x2="185" y2="266" stroke="#e53935" stroke-width="2" marker-end="url(#arrRed)"/>
+  <text x="200" y="256" font-size="10" fill="#c62828">direkt weitergeleitet</text>
+
+  <!-- Host Kernel left -->
+  <rect x="50" y="266" width="270" height="48" rx="8" fill="#b71c1c" stroke="#7f0000" stroke-width="1.5"/>
+  <text x="185" y="288" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Linux Host-Kernel</text>
+  <text x="185" y="306" text-anchor="middle" font-size="10" fill="#ffcdd2">führt syscall direkt aus</text>
+
+  <!-- Danger zone -->
+  <rect x="50" y="330" width="270" height="60" rx="8" fill="#ff8a65" stroke="#e64a19" stroke-width="1.5"/>
+  <text x="185" y="354" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">⚠ GEFAHR</text>
+  <text x="185" y="372" text-anchor="middle" font-size="10" fill="#fff">Kernel-Exploit = Host kompromittiert</text>
+
+  <!-- Attack arrow -->
+  <line x1="185" y1="314" x2="185" y2="330" stroke="#e64a19" stroke-width="2" marker-end="url(#arrOrange)"/>
+
+  <!-- filesystem access left -->
+  <rect x="50" y="406" width="270" height="40" rx="8" fill="#fff" stroke="#ef9a9a" stroke-width="1.2"/>
+  <text x="185" y="422" text-anchor="middle" font-size="10" fill="#c62828">Zugriff auf Host-Dateisystem</text>
+  <text x="185" y="438" text-anchor="middle" font-size="10" fill="#c62828">/etc/passwd, /proc, /var …</text>
+  <line x1="185" y1="390" x2="185" y2="406" stroke="#e53935" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrRed)"/>
+
+  <!-- ══ RIGHT COLUMN: gVisor ══ -->
+  <rect x="410" y="75" width="330" height="440" rx="10" fill="#e8f5e9" stroke="#43a047" stroke-width="1.5"/>
+  <text x="575" y="102" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b5e20">gVisor (--runtime=runsc)</text>
+
+  <!-- Python App right -->
+  <rect x="440" y="118" width="270" height="48" rx="8" fill="#fff" stroke="#a5d6a7" stroke-width="1.2"/>
+  <text x="575" y="138" text-anchor="middle" font-size="12" font-weight="bold" fill="#2e7d32">Python-Anwendung</text>
+  <text x="575" y="156" text-anchor="middle" font-size="10" fill="#888">import os; os.listdir("/")</text>
+
+  <!-- Arrow 1 right -->
+  <line x1="575" y1="166" x2="575" y2="196" stroke="#43a047" stroke-width="2" marker-end="url(#arrGreen)"/>
+  <text x="590" y="186" font-size="10" fill="#2e7d32">syscall: getdents64</text>
+
+  <!-- libc right -->
+  <rect x="440" y="196" width="270" height="40" rx="8" fill="#c8e6c9" stroke="#a5d6a7" stroke-width="1.2"/>
+  <text x="575" y="221" text-anchor="middle" font-size="11" fill="#1b5e20">libc (glibc)</text>
+
+  <!-- Arrow 2 right -->
+  <line x1="575" y1="236" x2="575" y2="266" stroke="#43a047" stroke-width="2" marker-end="url(#arrGreen)"/>
+
+  <!-- gVisor Sentry -->
+  <rect x="440" y="266" width="270" height="70" rx="8" fill="#1b5e20" stroke="#0a3d11" stroke-width="1.5"/>
+  <text x="575" y="291" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">gVisor Sentry</text>
+  <text x="575" y="309" text-anchor="middle" font-size="10" fill="#a5d6a7">User-Space-Kernel (Go)</text>
+  <text x="575" y="325" text-anchor="middle" font-size="10" fill="#a5d6a7">prüft · filtert · emuliert</text>
+
+  <!-- Shield -->
+  <rect x="440" y="352" width="270" height="40" rx="8" fill="#66bb6a" stroke="#388e3c" stroke-width="1.2"/>
+  <text x="575" y="368" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">✓ Nur sichere Syscalls</text>
+  <text x="575" y="384" text-anchor="middle" font-size="10" fill="#fff">werden weitergeleitet</text>
+
+  <line x1="575" y1="336" x2="575" y2="352" stroke="#43a047" stroke-width="2" marker-end="url(#arrGreen)"/>
+
+  <!-- Host Kernel right -->
+  <rect x="440" y="406" width="270" height="40" rx="8" fill="#388e3c" stroke="#1b5e20" stroke-width="1.5"/>
+  <text x="575" y="422" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Linux Host-Kernel</text>
+  <text x="575" y="438" text-anchor="middle" font-size="10" fill="#c8e6c9">minimale, geprüfte Aufrufe</text>
+
+  <line x1="575" y1="392" x2="575" y2="406" stroke="#43a047" stroke-width="2" marker-end="url(#arrGreen)"/>
+
+  <!-- VS label -->
+  <circle cx="380" cy="300" r="22" fill="#455a64"/>
+  <text x="380" y="306" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">VS</text>
+
+  <!-- Legend -->
+  <rect x="20" y="520" width="720" height="1" fill="#ccc"/>
+
+  <!-- Marker definitions -->
+  <defs>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M2 2L8 5L2 8" fill="none" stroke="#e53935" stroke-width="1.5"/>
+    </marker>
+    <marker id="arrGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M2 2L8 5L2 8" fill="none" stroke="#43a047" stroke-width="1.5"/>
+    </marker>
+    <marker id="arrOrange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M2 2L8 5L2 8" fill="none" stroke="#e64a19" stroke-width="1.5"/>
+    </marker>
+  </defs>
+
+</svg>
